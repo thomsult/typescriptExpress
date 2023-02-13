@@ -41,7 +41,35 @@ npx prisma migrate dev
 npm run dev
 
 ```
+### Usage
 
+**no Frontend!!**
+
+<details><summary><b>End Point</b></summary>
+
+Login
+```sh
+http://localhost:PORT/api/Login
+
+```
+Register
+```sh
+http://localhost:PORT/api/Register
+```
+
+**End Point Protected by Token!!**
+
+Users
+```sh
+http://localhost:PORT/api/Users
+
+```
+DeleteUserByID
+```sh
+http://localhost:PORT/api/Users/:id
+
+```
+</details>
 
 ## License
 
