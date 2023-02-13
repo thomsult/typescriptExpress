@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from 'express'
 import argon2 from "argon2";
 import jwt from "jsonwebtoken";
 
-import { FindUser } from '~/model/auth.model';
+import { findUser } from '~/model/auth.model';
 import { CreateException } from '~/utils/exceptions';
 import  User from '~/type/user';
 
@@ -16,7 +16,7 @@ const hashingOptions = {
     parallelism: 1,
   };
 
-export const TokenValidator = (req: Request, res: Response, next: NextFunction)=>{
+export const tokenValidator = (req: Request, res: Response, next: NextFunction)=>{
   try {
     const authorizationHeader = req.get("Authorization");
      if (authorizationHeader == null) {
@@ -38,7 +38,7 @@ export const TokenValidator = (req: Request, res: Response, next: NextFunction)=
 }
 
 
-export const HashPassword = (req: Request, res: Response, next: NextFunction)=>{
+export const hashPassword = (req: Request, res: Response, next: NextFunction)=>{
 
       argon2
   .hash(req.body.password, hashingOptions)
@@ -59,8 +59,8 @@ interface RequestWithUser extends Request{
   user?: User
 }
 
-export const GetUserCredential = (req: RequestWithUser, res: Response, next: NextFunction)=>{
-  FindUser(req.body).then((user)=>{
+export const getUserCredential = (req: RequestWithUser, res: Response, next: NextFunction)=>{
+  findUser(req.body).then((user)=>{
     req.user = user;
     next()
   }).catch((err)=>{
