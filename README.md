@@ -49,24 +49,24 @@ npm run dev
 
 Login
 ```sh
-http://localhost:PORT/api/Login
+POST http://localhost:PORT/api/Login
 
 ```
 Register
 ```sh
-http://localhost:PORT/api/Register
+POST http://localhost:PORT/api/Register
 ```
 
 **End Point Protected by Token!!**
 
 Users
 ```sh
-http://localhost:PORT/api/Users
+GET http://localhost:PORT/api/Users
 
 ```
 DeleteUserByID
 ```sh
-http://localhost:PORT/api/Users/:id
+DELETE http://localhost:PORT/api/Users/:id
 
 ```
 </details>
