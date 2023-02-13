@@ -6,6 +6,7 @@ import jwt from "jsonwebtoken";
 import { findUser } from '~/model/auth.model';
 import { CreateException } from '~/utils/exceptions';
 import  User from '~/type/user';
+import { getUserByEmail } from '~/model/user.model';
 
 
 
@@ -16,7 +17,7 @@ const hashingOptions = {
     parallelism: 1,
   };
 
-export const tokenValidator = (req: Request, res: Response, next: NextFunction)=>{
+export const tokenValidator = async (req: Request, res: Response, next: NextFunction)=>{
   try {
     const authorizationHeader = req.get("Authorization");
      if (authorizationHeader == null) {
@@ -29,8 +30,15 @@ export const tokenValidator = (req: Request, res: Response, next: NextFunction)=
     }
 
     const payload = jwt.verify(token, process.env.JWT_SECRET || "secret");
-    console.log(payload)
-    next();
+    const sub = payload.sub
+    const user = await getUserByEmail(String(sub))
+    if(user){
+     console.log(user)
+     next()
+    }else{
+     throw "Authorization header is not Valid";
+    }
+    
     
   } catch (err) {
     res.send(new CreateException(err,401))
@@ -56,7 +64,7 @@ export const hashPassword = (req: Request, res: Response, next: NextFunction)=>{
 
 
 interface RequestWithUser extends Request{
-  user?: User
+  user?: User | any
 }
 
 export const getUserCredential = (req: RequestWithUser, res: Response, next: NextFunction)=>{

@@ -2,7 +2,9 @@ import User from "~/type/user";
 import { getUserByEmail,addUser } from "./user.model";
 
 export const createUser = async (data: User) => {
+  console.log(data)
   const alreadyRegister = await getUserByEmail(data.email)
+  console.log(alreadyRegister)
     if (!alreadyRegister) {
       const user = await addUser(data);
       return Promise.resolve(user);
