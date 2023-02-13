@@ -1,8 +1,8 @@
 import cors from "cors";
 import express from "express";
-import { ApiController } from "./controller/Api.Controller";
-import { UserController } from "./controller/user.Controller";
-import { TokenValidator } from "./middlewares/auth.handler";
+import { apiController } from "./controller/api.Controller";
+import { userController } from "./controller/user.Controller";
+import { tokenValidator } from "./middlewares/auth.handler";
 
 import { ExceptionsHandler } from "./middlewares/exceptions.handler";
 import { UnknownRoutesHandler } from "./middlewares/unknownRoutes.handler";
@@ -17,11 +17,11 @@ app.get("/", (req, res) => res.send("🏠"));
 
 
 
-app.use('/api', ApiController)
+app.use('/api', apiController)
 
-app.use(TokenValidator)
+app.use(tokenValidator)
 
-app.use('/api/users', UserController)
+app.use('/api/users', userController)
 
 
 
