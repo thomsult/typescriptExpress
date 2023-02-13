@@ -7,6 +7,7 @@ export class NotFoundException extends Exception {
   constructor(error?: any | undefined) {
     super(error?error:"Not Found", 404)
   }
+  
 }
 
 //401

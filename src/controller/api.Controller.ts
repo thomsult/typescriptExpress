@@ -12,10 +12,9 @@ const apiController = Router()
 
 apiController.post("/register",validator, hashPassword,( req: Request, res: Response)=>{
     createUser(req.body).then(()=>{
-        res.send('Register')
+        res.json('Register')
     }).catch((err)=>{
         res.json({err:err})
-        //console.log({err:err})
     })
     
 })
@@ -24,7 +23,8 @@ apiController.post("/register",validator, hashPassword,( req: Request, res: Resp
 
 
 apiController.post("/login",validator, getUserCredential ,verifyPassword,( req: Request, res: Response)=>{
-    res.send(req.body)
+    
+    res.json(req.body)
 })
 
 

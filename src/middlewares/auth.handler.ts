@@ -5,8 +5,8 @@ import jwt from "jsonwebtoken";
 
 import { findUser } from '~/model/auth.model';
 import { CreateException } from '~/utils/exceptions';
-import  User from '~/type/user';
-import { getUserByEmail } from '~/model/user.model';
+import { getUserBy } from '~/model/user.model';
+
 
 
 
@@ -31,9 +31,8 @@ export const tokenValidator = async (req: Request, res: Response, next: NextFunc
 
     const payload = jwt.verify(token, process.env.JWT_SECRET || "secret");
     const sub = payload.sub
-    const user = await getUserByEmail(String(sub))
+    const user = await getUserBy("email",String(sub))
     if(user){
-     console.log(user)
      next()
     }else{
      throw "Authorization header is not Valid";
@@ -41,7 +40,7 @@ export const tokenValidator = async (req: Request, res: Response, next: NextFunc
     
     
   } catch (err) {
-    res.send(new CreateException(err,401))
+    res.json(new CreateException(err,401))
   }
 }
 
@@ -57,34 +56,29 @@ export const hashPassword = (req: Request, res: Response, next: NextFunction)=>{
     next()
   })
   .catch((err) => {
-    console.log(err)
-    res.send(new CreateException(err,500))
+    res.json(new CreateException(err,500))
   });
 };
 
+export const getUserCredential = (req: Request, res: Response, next: NextFunction)=>{
 
-interface RequestWithUser extends Request{
-  user?: User | any
-}
-
-export const getUserCredential = (req: RequestWithUser, res: Response, next: NextFunction)=>{
   findUser(req.body).then((user)=>{
+    
     req.user = user;
     next()
   }).catch((err)=>{
-    res.status(404).send(new CreateException(err,404))
-    console.log(err)
+    res.status(404).json(new CreateException(err,404))
   })  
 }
 
-export const verifyPassword = (req: RequestWithUser, res: Response, next: NextFunction) => {
+export const verifyPassword = (req: Request, res: Response, next: NextFunction) => {
   if(req.user !== undefined){
     argon2
-    .verify(req.user.hashedPassword, req.body.password)
+    .verify(req.user.hashedPassword||"", req.body.password)
     .then((isVerified) => {
       if (isVerified) {
         req.body.password = undefined
-        const payload = { sub: req.user?.email };
+        const payload:jwt.JwtPayload  = { sub: req.user?.email||"" };
         const token = jwt.sign(payload, process.env.JWT_SECRET || "secret", {
           expiresIn: "1h",
         });
@@ -96,7 +90,8 @@ export const verifyPassword = (req: RequestWithUser, res: Response, next: NextFu
       }
     })
     .catch((err) => {
-      res.send(new CreateException(err,401))
+      
+      res.json(new CreateException(err,401))
     }); 
   }
   

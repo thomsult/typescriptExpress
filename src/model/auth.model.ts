@@ -1,10 +1,8 @@
-import User from "~/type/user";
-import { getUserByEmail,addUser } from "./user.model";
+import {User} from "~/type/user";
+import { getUserBy,addUser } from "./user.model";
 
 export const createUser = async (data: User) => {
-  console.log(data)
-  const alreadyRegister = await getUserByEmail(data.email)
-  console.log(alreadyRegister)
+  const alreadyRegister = await getUserBy("email",data.email)
     if (!alreadyRegister) {
       const user = await addUser(data);
       return Promise.resolve(user);
@@ -16,7 +14,7 @@ export const createUser = async (data: User) => {
 
 
 export const findUser = async (data: User) => {
-  const FindUser = await getUserByEmail(data.email)
+  const FindUser = await getUserBy("email",data.email,true)
   if (!FindUser) {
     return Promise.reject("email Not Found");
     

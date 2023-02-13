@@ -7,6 +7,7 @@ interface bodyPost {
     password:string
 }
 export const validator = (req: Request, res: Response, next: NextFunction)=>{
+    
     const {email,password} = req.body as bodyPost
     ///Regex a implémenter
     
@@ -19,6 +20,7 @@ export const validator = (req: Request, res: Response, next: NextFunction)=>{
         errors.push({ field: key, message: "Should contain less than 255 characters" });
     }
   }
+  
 if (errors.length) {
     throw new BadRequestException(errors)
 } else {

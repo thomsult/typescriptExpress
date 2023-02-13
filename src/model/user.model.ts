@@ -1,43 +1,45 @@
-import { ObjectId } from "mongodb";
-import User from "~/type/user";
-import  db  from "~/utils/db";
+import {User,UserReply} from "~/type/user";
 import prisma from "~/utils/prisma";
 
-const collection  = db.collection('User')
+const RemovePassword = (user:User|null)=>{
+  return {email:user?.email,id:user?.id} as UserReply || undefined
+}
 
 export const getUsers = async ()=>{
-  const users = await prisma.user.findMany()
-   return users.map((el:any)=>{
-el.hashedPassword = undefined;
-return el
+  const users = await prisma.user.findMany() as User[]
+   return users.map((el)=>{
+return RemovePassword(el)
    }) || undefined
 }
 
-export const getUserByEmail = async (email:string)=>{
- 
+export const getUserBy =  async (type:string,value:string,withPassword = false)=>{
+
   const user = await prisma.user.findFirst({
-    where: { email: email },
+    where: {[type]:value},
   })
-    return user
+  return withPassword?user:RemovePassword(user)
+
 }
 
-export const getUserById = async (id:any)=>{
-  const user = await prisma.user.findFirst({
-    where: { id:id},
-  })
 
-    return user
-}
+
+
+
+
 export const deleteUserByEmail = async (email:string)=>{
   const deleteUser = await prisma.user.delete({
-    where: { email: email },
+    where: { email },
   })
-return deleteUser
+  return RemovePassword(deleteUser)
 }
 
-export const addUser = async (currentUser:any)=>{
+export const addUser = async (currentUser: User)=>{
   const userToAdd = await prisma.user.create({
-    data: currentUser,
+    data: {
+      email: currentUser.email,
+      hashedPassword: currentUser?.hashedPassword || "",
+
+    } ,
   })
   return userToAdd
     
