@@ -5,6 +5,8 @@
 * [Argon2](https://www.npmjs.com/package/argon2)
 * [Prisma](https://www.prisma.io)
 
+- Branch [MangoDB](https://github.com/thomsult/typescriptExpress/tree/dev_MangoDB)
+- Branch [SQL Lite](https://github.com/thomsult/typescriptExpress/tree/dev)
 
 ## Getting Started
 
